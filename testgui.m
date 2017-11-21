@@ -22,7 +22,7 @@ function varargout = testgui(varargin)
 
     % Edit the above text to modify the response to help testgui
 
-    % Last Modified by GUIDE v2.5 21-Nov-2017 11:55:00
+    % Last Modified by GUIDE v2.5 21-Nov-2017 21:04:59
 
     % Begin initialization code - DO NOT EDIT
     gui_Singleton = 1;
@@ -59,11 +59,7 @@ function testgui_OpeningFcn(hObject, eventdata, handles, varargin)
     guidata(hObject, handles);
 
     % UIWAIT makes testgui wait for user response (see UIRESUME)
-    % uiwait(handles.figure1);
-%     plot(handles.axes1, x, sin(x*get(handles.slider1, 'Value')))
-    global savanna;
-    savanna = generate_savanna(0.32,0.34);
-    image(handles.axes1, get_pic(savanna));
+    reset_button_Callback(hObject, eventdata, handles);
 end
 
 % --- Outputs from this function are returned to the command line.
@@ -77,42 +73,47 @@ function varargout = testgui_OutputFcn(hObject, eventdata, handles)
     varargout{1} = handles.output;
 end
 
-% --- Executes on button press in resetbutton.
-function resetbutton_Callback(hObject, eventdata, handles)
-    % hObject    handle to resetbutton (see GCBO)
+% --- Executes on button press in reset_button.
+function reset_button_Callback(hObject, eventdata, handles)
+    % hObject    handle to reset_button (see GCBO)
     % eventdata  reserved - to be defined in a future version of MATLAB
     % handles    structure with handles and user data (see GUIDATA)
 %     plot(handles.axes1, x, sin(x*1));
+    
     global savanna;
-    savanna = generate_savanna(0.32,0.34);
+    global hurricane_i;
+    global HURRICANE;
+    global age;
+    savanna = generate_savanna(0.32, 0.34);
     image(handles.axes1, get_pic(savanna));
-%     set(handles.slider1, 'Value', 1);
-%     frekv = get(handles.slider1, 'Value');
-%     write_text = ['f(x)=sin(', num2str(frekv), ')*x'];
-%     set(handles.edit1, 'String', num2str(frekv));
-%     set(handles.text2, 'String', write_text);
+    
+    HURRICANE = [intmax(), 20, 10, 5, 1];
+    hurricane_i = 2;
+    set(handles.hurricane_slider, 'Value', 2);
+    set(handles.hurricane_edittext, 'String', num2str(2));
+    set_year(handles, 0);
+    age = 0;
 end
 
 
 % --- Executes on slider movement.
-function slider1_Callback(hObject, eventdata, handles)
-    % hObject    handle to slider1 (see GCBO)
+function hurricane_slider_Callback(hObject, eventdata, handles)
+    % hObject    handle to hurricane_slider (see GCBO)
     % eventdata  reserved - to be defined in a future version of MATLAB
     % handles    structure with handles and user data (see GUIDATA)
-    global savanna;
-    frekv = get(handles.slider1, 'Value');
-%     plot(handles.axes1, x, sin(x*frekv))
-    image(handles.axes1, get_pic(savanna));
-    set(handles.edit1, 'String', num2str(frekv));
-    write_text = ['f(x)=sin(', num2str(frekv), ')*x'];
-    set(handles.text2, 'String', write_text);
+    global hurricane_i;
+    index = get(handles.hurricane_slider, 'Value');
+    index = uint8(index);
+    hurricane_i = index;
+    set(handles.hurricane_edittext, 'String', num2str(index));
+    
     % Hints: get(hObject,'Value') returns position of slider
     %        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
 end
 
 % --- Executes during object creation, after setting all properties.
-function slider1_CreateFcn(hObject, eventdata, handles)
-    % hObject    handle to slider1 (see GCBO)
+function hurricane_slider_CreateFcn(hObject, eventdata, handles)
+    % hObject    handle to hurricane_slider (see GCBO)
     % eventdata  reserved - to be defined in a future version of MATLAB
     % handles    empty - handles not created until after all CreateFcns called
 
@@ -123,18 +124,18 @@ function slider1_CreateFcn(hObject, eventdata, handles)
 end
 
 
-function edit1_Callback(hObject, eventdata, handles)
-    % hObject    handle to edit1 (see GCBO)
+function hurricane_edittext_Callback(hObject, eventdata, handles)
+    % hObject    handle to hurricane_edittext (see GCBO)
     % eventdata  reserved - to be defined in a future version of MATLAB
     % handles    structure with handles and user data (see GUIDATA)
 
-    % Hints: get(hObject,'String') returns contents of edit1 as text
-    %        str2double(get(hObject,'String')) returns contents of edit1 as a double
+    % Hints: get(hObject,'String') returns contents of hurricane_edittext as text
+    %        str2double(get(hObject,'String')) returns contents of hurricane_edittext as a double
 end
 
 % --- Executes during object creation, after setting all properties.
-function edit1_CreateFcn(hObject, eventdata, handles)
-    % hObject    handle to edit1 (see GCBO)
+function hurricane_edittext_CreateFcn(hObject, eventdata, handles)
+    % hObject    handle to hurricane_edittext (see GCBO)
     % eventdata  reserved - to be defined in a future version of MATLAB
     % handles    empty - handles not created until after all CreateFcns called
 
@@ -145,18 +146,17 @@ function edit1_CreateFcn(hObject, eventdata, handles)
     end
 end
 
-% --- Executes on button press in pushbutton2.
-function pushbutton2_Callback(hObject, eventdata, handles)
-    % hObject    handle to pushbutton2 (see GCBO)
+% --- Executes on button press in hurricane_button.
+function hurricane_button_Callback(hObject, eventdata, handles)
+    % hObject    handle to hurricane_button (see GCBO)
     % eventdata  reserved - to be defined in a future version of MATLAB
     % handles    structure with handles and user data (see GUIDATA)
-    global savanna;
-    frekv = get(handles.edit1, 'String');
-    if (str2num(frekv) <= 10 && str2num(frekv) >= 1)
-        set(handles.slider1, 'Value', str2num(frekv));
-        write_text = ['f(x)=sin(', frekv, ')*x'];
-%         plot(handles.axes1, x, sin(x*str2num(frekv)))
-        image(handles.axes1, get_pic(savanna));
+    global hurricane_i;
+    index = get(handles.hurricane_edittext, 'String');
+    if (str2num(index) <= 5 && str2num(index) >= 1)
+        index = uint8(str2num(index));
+        set(handles.hurricane_slider, 'Value', index);
+        hurricane_i = index;
     end
 end
 
@@ -168,10 +168,51 @@ function startbutton_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
     global savanna;
-    for i = 1:100
-        set(handles.text2, 'String', int2str(i));
-        savanna = step(savanna);
+    global hurricane_i;
+    global HURRICANE;
+    global age;
+    set(handles.reset_button, 'Enable','off');
+    ages = get(handles.ages_edittext,'String');
+    ages = double(uint64(str2num(ages)));
+    if ages < 1 || ages > 1000
+        ages = 100;
+    end
+    for i = 1:ages
+        set_year(handles, age+i);
+        savanna = step(savanna); % growing of savanna
+        if rem(i, HURRICANE(hurricane_i)) == 0
+            savanna = hurricane_step(savanna);
+        end
         image(handles.axes1, get_pic(savanna));
         drawnow;
     end
+    age = age + ages;
+    set(handles.reset_button, 'Enable','on');
 end
+
+function set_year(handles, year)
+    set(handles.year_text, 'String', ['Year: ' int2str(year)]);
+end
+
+function ages_edittext_Callback(hObject, eventdata, handles)
+% hObject    handle to ages_edittext (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of ages_edittext as text
+%        str2double(get(hObject,'String')) returns contents of ages_edittext as a double
+end
+
+% --- Executes during object creation, after setting all properties.
+function ages_edittext_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to ages_edittext (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+    if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+        set(hObject,'BackgroundColor','white');
+    end
+end
+

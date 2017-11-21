@@ -13,6 +13,8 @@ function rgbPic = get_pic(savanna)
     rgbPic = recolor(rgbPic, find(savanna == 3), 0, 0, .8);
     rgbPic = recolor(rgbPic, find(savanna == 4), 0, 0, .4);
     
+    % HURRICANE
+    rgbPic = recolor(rgbPic, find(savanna == 5), .5, .5, .5);
     
 end
 

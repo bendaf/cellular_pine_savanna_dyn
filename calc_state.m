@@ -3,6 +3,9 @@ function new_state = calc_state(state, ngbhd, cngbhd)
     hasHw = sum(find(cngbhd == 3,1)) + sum(find(cngbhd == 4,1));
     
     % grass -> pine, grass -> hardwood, pine -> hardwood = [.03 .01 .02];
+    if state > 4 
+        state = 0; 
+    end
     new_state = state;
     switch state
         case 0
