@@ -22,7 +22,7 @@ function varargout = testgui(varargin)
 
     % Edit the above text to modify the response to help testgui
 
-    % Last Modified by GUIDE v2.5 27-Oct-2017 08:56:39
+    % Last Modified by GUIDE v2.5 21-Nov-2017 11:55:00
 
     % Begin initialization code - DO NOT EDIT
     gui_Singleton = 1;
@@ -77,20 +77,20 @@ function varargout = testgui_OutputFcn(hObject, eventdata, handles)
     varargout{1} = handles.output;
 end
 
-% --- Executes on button press in pushbutton1.
-function pushbutton1_Callback(hObject, eventdata, handles)
-    % hObject    handle to pushbutton1 (see GCBO)
+% --- Executes on button press in resetbutton.
+function resetbutton_Callback(hObject, eventdata, handles)
+    % hObject    handle to resetbutton (see GCBO)
     % eventdata  reserved - to be defined in a future version of MATLAB
     % handles    structure with handles and user data (see GUIDATA)
 %     plot(handles.axes1, x, sin(x*1));
-    set(handles.slider1, 'Value', 1);
-    frekv = get(handles.slider1, 'Value');
-    write_text = ['f(x)=sin(', num2str(frekv), ')*x'];
-    set(handles.edit1, 'String', num2str(frekv));
-    set(handles.text2, 'String', write_text);
     global savanna;
     savanna = generate_savanna(0.32,0.34);
     image(handles.axes1, get_pic(savanna));
+%     set(handles.slider1, 'Value', 1);
+%     frekv = get(handles.slider1, 'Value');
+%     write_text = ['f(x)=sin(', num2str(frekv), ')*x'];
+%     set(handles.edit1, 'String', num2str(frekv));
+%     set(handles.text2, 'String', write_text);
 end
 
 
@@ -157,5 +157,20 @@ function pushbutton2_Callback(hObject, eventdata, handles)
         write_text = ['f(x)=sin(', frekv, ')*x'];
 %         plot(handles.axes1, x, sin(x*str2num(frekv)))
         image(handles.axes1, get_pic(savanna));
+    end
+end
+
+
+% --- Executes on button press in startbutton.
+function startbutton_Callback(hObject, eventdata, handles)
+% hObject    handle to startbutton (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+    global savanna;
+    for i = 1:100
+        set(handles.text2, 'String', int2str(i));
+        image(handles.axes1, get_pic(savanna));
+        drawnow;
     end
 end
