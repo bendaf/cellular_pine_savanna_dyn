@@ -14,7 +14,7 @@ function new_state = calc_state(state, ngbhd, cngbhd)
             end
         case 1
             if hasHw
-                new_state = 2*uint8(rand()-.48) + 1
+                new_state = 2*uint8(rand()-.48) + 1;
             end
             if new_state == 1
                 new_state = uint8(rand()) + 1;

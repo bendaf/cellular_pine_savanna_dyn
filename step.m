@@ -9,6 +9,4 @@ function new_savanna = step(savanna)
             new_savanna(i,j) = calc_state(savanna(i,j), savanna(is,js), savanna(cis,cjs));
         end
     end
-    
-
 end
