@@ -61,12 +61,9 @@ function testgui_OpeningFcn(hObject, eventdata, handles, varargin)
     % UIWAIT makes testgui wait for user response (see UIRESUME)
     % uiwait(handles.figure1);
 %     plot(handles.axes1, x, sin(x*get(handles.slider1, 'Value')))
-    global pic;
-    pic = zeros(50,50,1);
-    rng('shuffle');
-    pic(uint64(rand(100,1)*2499+1)) = 1;
-    pic(uint64(rand(100,1)*2499+1)) = 4;
-    image(handles.axes1, get_pic(pic));
+    global savanna;
+    savanna = generate_savanna(0.32,0.34);
+    image(handles.axes1, get_pic(savanna));
 end
 
 % --- Outputs from this function are returned to the command line.
@@ -86,13 +83,14 @@ function pushbutton1_Callback(hObject, eventdata, handles)
     % eventdata  reserved - to be defined in a future version of MATLAB
     % handles    structure with handles and user data (see GUIDATA)
 %     plot(handles.axes1, x, sin(x*1));
-    global pic;
-    image(handles.axes1, get_pic(pic));
     set(handles.slider1, 'Value', 1);
     frekv = get(handles.slider1, 'Value');
     write_text = ['f(x)=sin(', num2str(frekv), ')*x'];
     set(handles.edit1, 'String', num2str(frekv));
     set(handles.text2, 'String', write_text);
+    global savanna;
+    savanna = generate_savanna(0.32,0.34);
+    image(handles.axes1, get_pic(savanna));
 end
 
 
@@ -101,10 +99,10 @@ function slider1_Callback(hObject, eventdata, handles)
     % hObject    handle to slider1 (see GCBO)
     % eventdata  reserved - to be defined in a future version of MATLAB
     % handles    structure with handles and user data (see GUIDATA)
-    global pic;
+    global savanna;
     frekv = get(handles.slider1, 'Value');
 %     plot(handles.axes1, x, sin(x*frekv))
-    image(handles.axes1, get_pic(pic));
+    image(handles.axes1, get_pic(savanna));
     set(handles.edit1, 'String', num2str(frekv));
     write_text = ['f(x)=sin(', num2str(frekv), ')*x'];
     set(handles.text2, 'String', write_text);
@@ -152,12 +150,12 @@ function pushbutton2_Callback(hObject, eventdata, handles)
     % hObject    handle to pushbutton2 (see GCBO)
     % eventdata  reserved - to be defined in a future version of MATLAB
     % handles    structure with handles and user data (see GUIDATA)
-    global pic;
+    global savanna;
     frekv = get(handles.edit1, 'String');
     if (str2num(frekv) <= 10 && str2num(frekv) >= 1)
         set(handles.slider1, 'Value', str2num(frekv));
         write_text = ['f(x)=sin(', frekv, ')*x'];
 %         plot(handles.axes1, x, sin(x*str2num(frekv)))
-        image(handles.axes1, get_pic(pic));
+        image(handles.axes1, get_pic(savanna));
     end
 end
