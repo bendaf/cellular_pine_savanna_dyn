@@ -170,6 +170,7 @@ function startbutton_Callback(hObject, eventdata, handles)
     global savanna;
     for i = 1:100
         set(handles.text2, 'String', int2str(i));
+        savanna = step(savanna);
         image(handles.axes1, get_pic(savanna));
         drawnow;
     end
