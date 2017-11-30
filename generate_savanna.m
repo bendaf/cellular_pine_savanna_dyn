@@ -7,6 +7,7 @@ function savanna = generate_savanna(pine_ratio, hw_ratio)
     vec = randperm(2500);
     pine_end_i = uint64(2500*pine_ratio);
     hw_end_i = uint64(2500*(pine_ratio+hw_ratio));
-    savanna(vec(1:pine_end_i)) = uint8(rand(pine_end_i,1)*1)+1;
-    savanna(vec(pine_end_i+1:hw_end_i)) = uint64(rand(hw_end_i-pine_end_i,1)*1)+3;
+    savanna(vec(1:pine_end_i)) = uint8(rand(pine_end_i,1)*get_repr('young')) + 1;
+    savanna(vec(pine_end_i+1:hw_end_i)) = ...
+        uint64(rand(hw_end_i-pine_end_i,1)*get_repr('young')) + get_repr('young_hw');
 end
