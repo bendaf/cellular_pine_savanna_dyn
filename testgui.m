@@ -153,8 +153,8 @@ function hurricane_button_Callback(hObject, eventdata, handles)
     % handles    structure with handles and user data (see GUIDATA)
     global hurricane_i;
     index = get(handles.hurricane_edittext, 'String');
-    if (str2num(index) <= 5 && str2num(index) >= 1)
-        index = uint8(str2num(index));
+    if (str2double(index) <= 5 && str2double(index) >= 1)
+        index = uint8(str2double(index));
         set(handles.hurricane_slider, 'Value', index);
         hurricane_i = index;
     end
@@ -173,14 +173,14 @@ function startbutton_Callback(hObject, eventdata, handles)
     global age;
     set(handles.reset_button, 'Enable','off');
     ages = get(handles.ages_edittext,'String');
-    ages = double(uint64(str2num(ages)));
+    ages = double(uint64(str2double(ages)));
     if ages < 1 || ages > 1000
         ages = 100;
     end
     for i = 1:ages
         set_year(handles, age+i);
         savanna = step(savanna); % growing of savanna
-        if rem(i, HURRICANE(hurricane_i)) == 0
+        if rem(i, HURRICANE(hurricane_i)) == 0  % hurricane
             savanna = hurricane_step(savanna);
         end
         image(handles.axes1, get_pic(savanna));
