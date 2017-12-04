@@ -85,6 +85,7 @@ function reset_button_Callback(hObject, eventdata, handles)
     global hurricane_i;
     global LIGHTNING;
     global lightning_i;
+    global field_distr;
     global age;
     savanna = generate_savanna(0.32, 0.34);
     image(handles.axes1, get_pic(savanna, zeros(size(savanna))));
@@ -99,7 +100,13 @@ function reset_button_Callback(hObject, eventdata, handles)
     set(handles.lightning_edittext, 'String', num2str(2));
     set(handles.ages_edittext, 'String', 99);
     set_year(handles, 0);
+    field_distr = zeros(1,3);
     age = 0;
+    axes(handles.axes2); % Make averSpec the current axes.
+    cla reset; % Do a complete and total reset of the axes.
+    update_distr(handles, 1);
+    handles.axes2.YLim = [0, 1]; 
+    handles.axes2.XLim = [0, age+1];
 end
 
 
@@ -177,26 +184,47 @@ function startbutton_Callback(hObject, eventdata, handles)
     global hurricane_i;
     global LIGHTNING;
     global lightning_i;
+    global field_distr;
     global age;
     set(handles.reset_button, 'Enable','off');
     ages = get(handles.ages_edittext,'String');
     ages = double(uint64(str2double(ages)));
     if ages < 1 || ages > 1000
-        ages = 100;
+        ages = 99;
+        set(handles.ages_edittext, 'String', 99);
     end
+    field_distr(age+1:age+ages+1, :) = zeros(ages+1, 3);
+    update_distr(handles, 1);
+    handles.axes2.XLim = [0, age+ages];
     for i = 1:ages
         set_year(handles, age+i);
         burning_table = lightning_step(savanna, LIGHTNING(lightning_i)); % lightning
         
         savanna = step(savanna, burning_table); % growing of savanna
-        if rem(i, HURRICANE(hurricane_i)) == 0  % hurricane
+        if rem(age+i, HURRICANE(hurricane_i)) == 0  % hurricane
             savanna = hurricane_step(savanna);
         end
         image(handles.axes1, get_pic(savanna, burning_table));
+        update_distr(handles, i+1);
         drawnow;
     end
     age = age + ages;
     set(handles.reset_button, 'Enable','on');
+end
+
+function update_distr(handles, ages)
+    global savanna;
+    global field_distr;
+    global age;
+    field_distr(age+ages,:) = calc_distr(savanna);
+    X = 1:age+ages;
+    Y = field_distr(1:age+ages,:);
+    hold on;
+    plot(handles.axes2, X, Y(:,1), 'Color', [158/255, 149/255, 56/255], 'LineWidth', 1);
+    plot(handles.axes2, X, Y(:,2), 'Color', [0, 0.6, 0], 'LineWidth', 1);
+    plot(handles.axes2, X, Y(:,3), 'Color', [0, 0, 0.6], 'LineWidth', 1);
+    hold off;
+    legend('grass','pine','hardwood','Orientation','horizontal');
 end
 
 function set_year(handles, year)
