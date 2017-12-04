@@ -22,7 +22,7 @@ function varargout = testgui(varargin)
 
     % Edit the above text to modify the response to help testgui
 
-    % Last Modified by GUIDE v2.5 21-Nov-2017 21:04:59
+    % Last Modified by GUIDE v2.5 04-Dec-2017 14:04:22
 
     % Begin initialization code - DO NOT EDIT
     gui_Singleton = 1;
@@ -81,16 +81,23 @@ function reset_button_Callback(hObject, eventdata, handles)
 %     plot(handles.axes1, x, sin(x*1));
     
     global savanna;
-    global hurricane_i;
     global HURRICANE;
+    global hurricane_i;
+    global LIGHTNING;
+    global lightning_i;
     global age;
     savanna = generate_savanna(0.32, 0.34);
-    image(handles.axes1, get_pic(savanna));
+    image(handles.axes1, get_pic(savanna, zeros(size(savanna))));
     
     HURRICANE = [intmax(), 20, 10, 5, 1];
     hurricane_i = 2;
+    LIGHTNING = [0, 1, 10, 100, 1000];
+    lightning_i = 2;
     set(handles.hurricane_slider, 'Value', 2);
     set(handles.hurricane_edittext, 'String', num2str(2));
+    set(handles.lightning_slider, 'Value', 2);
+    set(handles.lightning_edittext, 'String', num2str(2));
+    set(handles.ages_edittext, 'String', 99);
     set_year(handles, 0);
     age = 0;
 end
@@ -122,7 +129,6 @@ function hurricane_slider_CreateFcn(hObject, eventdata, handles)
         set(hObject, 'BackgroundColor', [.9 .9 .9]);
     end
 end
-
 
 function hurricane_edittext_Callback(hObject, eventdata, handles)
     % hObject    handle to hurricane_edittext (see GCBO)
@@ -160,7 +166,6 @@ function hurricane_button_Callback(hObject, eventdata, handles)
     end
 end
 
-
 % --- Executes on button press in startbutton.
 function startbutton_Callback(hObject, eventdata, handles)
 % hObject    handle to startbutton (see GCBO)
@@ -168,8 +173,10 @@ function startbutton_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
     global savanna;
-    global hurricane_i;
     global HURRICANE;
+    global hurricane_i;
+    global LIGHTNING;
+    global lightning_i;
     global age;
     set(handles.reset_button, 'Enable','off');
     ages = get(handles.ages_edittext,'String');
@@ -179,11 +186,13 @@ function startbutton_Callback(hObject, eventdata, handles)
     end
     for i = 1:ages
         set_year(handles, age+i);
-        savanna = step(savanna); % growing of savanna
+        burning_table = lightning_step(savanna, LIGHTNING(lightning_i)); % lightning
+        
+        savanna = step(savanna, burning_table); % growing of savanna
         if rem(i, HURRICANE(hurricane_i)) == 0  % hurricane
             savanna = hurricane_step(savanna);
         end
-        image(handles.axes1, get_pic(savanna));
+        image(handles.axes1, get_pic(savanna, burning_table));
         drawnow;
     end
     age = age + ages;
@@ -216,3 +225,67 @@ function ages_edittext_CreateFcn(hObject, eventdata, handles)
     end
 end
 
+% --- Executes on slider movement.
+function lightning_slider_Callback(hObject, eventdata, handles)
+% hObject    handle to lightning_slider (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'Value') returns position of slider
+%        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
+
+    global lightning_i;
+    index = get(handles.lightning_slider, 'Value');
+    index = uint8(index);
+    lightning_i = index;
+    set(handles.lightning_edittext, 'String', num2str(index));
+end
+
+% --- Executes during object creation, after setting all properties.
+function lightning_slider_CreateFcn(hObject, eventdata, handles)
+    % hObject    handle to lightning_slider (see GCBO)
+    % eventdata  reserved - to be defined in a future version of MATLAB
+    % handles    empty - handles not created until after all CreateFcns called
+
+    % Hint: slider controls usually have a light gray background.
+    if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+        set(hObject,'BackgroundColor',[.9 .9 .9]);
+    end
+end
+
+function lightning_edittext_Callback(hObject, eventdata, handles)
+% hObject    handle to lightning_edittext (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of lightning_edittext as text
+%        str2double(get(hObject,'String')) returns contents of lightning_edittext as a double
+end
+
+% --- Executes during object creation, after setting all properties.
+function lightning_edittext_CreateFcn(hObject, eventdata, handles)
+    % hObject    handle to lightning_edittext (see GCBO)
+    % eventdata  reserved - to be defined in a future version of MATLAB
+    % handles    empty - handles not created until after all CreateFcns called
+
+    % Hint: edit controls usually have a white background on Windows.
+    %       See ISPC and COMPUTER.
+    if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+        set(hObject,'BackgroundColor','white');
+    end
+end
+
+% --- Executes on button press in lightning_button.
+function lightning_button_Callback(hObject, eventdata, handles)
+    % hObject    handle to lightning_button (see GCBO)
+    % eventdata  reserved - to be defined in a future version of MATLAB
+    % handles    structure with handles and user data (see GUIDATA)
+    
+    global lightning_i;
+    index = get(handles.lightning_edittext, 'String');
+    if (str2double(index) <= 5 && str2double(index) >= 1)
+        index = uint8(str2double(index));
+        set(handles.lightning_slider, 'Value', index);
+        lightning_i = index;
+    end
+end

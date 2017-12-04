@@ -1,4 +1,4 @@
-function rgbPic = get_pic(savanna)
+function rgbPic = get_pic(savanna, burning_table)
     rgbPic = zeros(size(savanna,1), size(savanna,2),3);
     
     % YOUNG & ADULT PINE
@@ -14,6 +14,9 @@ function rgbPic = get_pic(savanna)
     
     % HURRICANE
     rgbPic = recolor(rgbPic, find(savanna == get_repr('hurricane')), .5, .5, .5);
+    
+    % LIGHTNING
+    rgbPic = recolor(rgbPic, find(burning_table == get_repr('lightning')), 1, 1, 1);
     
 end
 
