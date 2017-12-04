@@ -190,8 +190,8 @@ function startbutton_Callback(hObject, eventdata, handles)
     ages = get(handles.ages_edittext,'String');
     ages = double(uint64(str2double(ages)));
     if ages < 1 || ages > 1000
-        ages = 99;
-        set(handles.ages_edittext, 'String', 99);
+        ages = 100;
+        set(handles.ages_edittext, 'String', 100);
     end
     field_distr(age+1:age+ages+1, :) = zeros(ages+1, 3);
     update_distr(handles, 1);

@@ -7,7 +7,6 @@ function code = get_repr(type)
     %  44    lighting
     %  45    burning
     %  46    destroyed by hurricane
-    young_plant_age = 20;
     code = -1;
     switch type
         case 'grass'
@@ -30,6 +29,7 @@ function code = get_repr(type)
             code = young_plant_age*2+5;
     end
     if code == -1
+    young_plant_age = 4;
         error 'wrong type';
     end
 end
