@@ -107,6 +107,7 @@ function reset_button_Callback(hObject, eventdata, handles)
     update_distr(handles, 1);
     handles.axes2.YLim = [0, 1]; 
     handles.axes2.XLim = [0, age+1];
+    legend('grass','pine','hardwood','Orientation','horizontal');
 end
 
 
@@ -224,7 +225,6 @@ function update_distr(handles, ages)
     plot(handles.axes2, X, Y(:,2), 'Color', [0, 0.6, 0], 'LineWidth', 1);
     plot(handles.axes2, X, Y(:,3), 'Color', [0, 0, 0.6], 'LineWidth', 1);
     hold off;
-    legend('grass','pine','hardwood','Orientation','horizontal');
 end
 
 function set_year(handles, year)

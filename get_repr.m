@@ -7,29 +7,26 @@ function code = get_repr(type)
     %  44    lighting
     %  45    burning
     %  46    destroyed by hurricane
-    code = -1;
-    switch type
-        case 'grass'
-            code = 0;
-        case 'young_pine'
-            code = 1;
-        case 'young'
-            code = young_plant_age;
-        case 'elder_pine'
-            code = young_plant_age+1;
-        case 'young_hw'
-            code = young_plant_age+2;
-        case 'elder_hw'
-            code = young_plant_age*2+2;
-        case 'lightning'
-            code = young_plant_age*2+3;
-        case 'burning'
-            code = young_plant_age*2+4;
-        case 'hurricane'
-            code = young_plant_age*2+5;
-    end
-    if code == -1
     young_plant_age = 4;
+    if strcmp(type, 'grass')
+        code = 0;
+    elseif strcmp(type, 'young_pine')
+        code = 1;
+    elseif strcmp(type, 'young')
+        code = young_plant_age;
+    elseif strcmp(type, 'elder_pine')
+        code = young_plant_age+1;
+    elseif strcmp(type, 'young_hw')
+        code = young_plant_age+2;
+    elseif strcmp(type, 'elder_hw')
+        code = young_plant_age*2+2;
+    elseif strcmp(type, 'lightning')
+        code = young_plant_age*2+3;
+    elseif strcmp(type, 'burning')
+        code = young_plant_age*2+4;
+    elseif strcmp(type, 'hurricane')
+        code = young_plant_age*2+5;
+    else
         error 'wrong type';
     end
 end
