@@ -2,7 +2,7 @@ function new_state = calc_state(state, ngbhd, cngbhd)
     hasPine = ~isempty(find(ngbhd >= get_repr('young_pine') & ...
         ngbhd <= get_repr('elder_pine'), 1));
     hasHw = ~isempty(find(cngbhd >= get_repr('young_hw') & ...
-        cngbhd < get_repr('elder_hw'), 1));
+        cngbhd <= get_repr('elder_hw'), 1));
     
     % grass -> pine, grass -> hardwood, pine -> hardwood = [.03 .01 .02];
     if state > get_repr('elder_hw')

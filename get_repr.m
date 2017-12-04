@@ -22,7 +22,7 @@ function code = get_repr(type)
             code = young_plant_age+2;
         case 'elder_hw'
             code = young_plant_age*2+2;
-        case 'lightening'
+        case 'lightning'
             code = young_plant_age*2+3;
         case 'burning'
             code = young_plant_age*2+4;
