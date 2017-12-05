@@ -20,14 +20,22 @@ function new_state = calc_state(state, ngbhd, cngbhd, burning)
     r = rand();
     if burning == get_repr('burning')
         new_state = state;
-        if state < get_repr('elder_pine') && r < 0.8
-            new_state = get_repr('grass');
-        elseif state == get_repr('elder_pine') && r < 0.2
-            new_state = get_repr('grass');
-        elseif state < get_repr('elder_hw') && r < 0.95
-            new_state = get_repr('grass');
-        elseif state == get_repr('elder_hw') && r < 0.9
-            new_state = get_repr('grass');
+        if state < get_repr('elder_pine')
+            if r < 0.8
+                new_state = get_repr('grass');
+            end
+        elseif state == get_repr('elder_pine')
+            if r < 0.2
+                new_state = get_repr('grass');
+            end
+        elseif state < get_repr('elder_hw') 
+            if r < 0.95
+                new_state = get_repr('grass');
+            end
+        elseif state == get_repr('elder_hw') 
+            if r < 0.9
+                new_state = get_repr('grass');
+            end
         end
     
     % grass -> pine: 0.03, grass -> hardwood: 0.01, pine -> hardwood: 0.02;
