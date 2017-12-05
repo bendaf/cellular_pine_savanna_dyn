@@ -22,7 +22,7 @@ function varargout = testgui(varargin)
 
     % Edit the above text to modify the response to help testgui
 
-    % Last Modified by GUIDE v2.5 04-Dec-2017 14:04:22
+    % Last Modified by GUIDE v2.5 05-Dec-2017 13:14:08
 
     % Begin initialization code - DO NOT EDIT
     gui_Singleton = 1;
@@ -61,8 +61,10 @@ function testgui_OpeningFcn(hObject, eventdata, handles, varargin)
     % UIWAIT makes testgui wait for user response (see UIRESUME)
     global HURRICANE;
     global LIGHTNING;
+    global BURNING;
     HURRICANE = [intmax(), 20, 10, 5, 1];
     LIGHTNING = [0, 1, 10, 100, 1000];
+    BURNING = [0.1, 1, 1.2, 1.5, 2];
     reset_button_Callback(hObject, eventdata, handles);
 end
 
@@ -87,6 +89,7 @@ function reset_button_Callback(hObject, eventdata, handles)
     global savanna;
     global hurricane_i;
     global lightning_i;
+    global burning_i;
     global field_distr;
     global age;
     
@@ -95,10 +98,13 @@ function reset_button_Callback(hObject, eventdata, handles)
     set_year(handles, 0);
     hurricane_i = 2;
     lightning_i = 2;
+    burning_i = 2;
     set(handles.hurricane_slider, 'Value', 2);
     set(handles.hurricane_edittext, 'String', num2str(2));
     set(handles.lightning_slider, 'Value', 2);
     set(handles.lightning_edittext, 'String', num2str(2));
+    set(handles.burning_slider, 'Value', 2);
+    set(handles.burning_edittext, 'String', num2str(2));
     set(handles.ages_edittext, 'String', 99);
     
     % axes 1
@@ -190,6 +196,8 @@ function startbutton_Callback(hObject, eventdata, handles)
     global hurricane_i;
     global LIGHTNING;
     global lightning_i;
+    global BURNING;
+    global burning_i;
     global field_distr;
     global age;
     
@@ -209,6 +217,7 @@ function startbutton_Callback(hObject, eventdata, handles)
     for i = 1:ages
         set_year(handles, age+i);
         burning_table = lightning_step(savanna, LIGHTNING(lightning_i)); % lightning
+        burning_table = burning_step(savanna, burning_table, BURNING(burning_i)); % burning
         savanna = step(savanna, burning_table); % growing of savanna
         if rem(age+i, HURRICANE(hurricane_i)) == 0  % hurricane
             savanna = hurricane_step(savanna);
@@ -326,3 +335,68 @@ function lightning_button_Callback(hObject, eventdata, handles)
         lightning_i = index;
     end
 end
+
+% --- Executes on slider movement.
+function burning_slider_Callback(hObject, eventdata, handles)
+    % hObject    handle to burning_slider (see GCBO)
+    % eventdata  reserved - to be defined in a future version of MATLAB
+    % handles    structure with handles and user data (see GUIDATA)
+
+    % Hints: get(hObject,'Value') returns position of slider
+    %        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
+    global burning_i;
+    index = get(handles.burning_slider, 'Value');
+    index = uint8(index);
+    burning_i = index;
+    set(handles.burning_edittext, 'String', num2str(index));
+end
+
+% --- Executes during object creation, after setting all properties.
+function burning_slider_CreateFcn(hObject, eventdata, handles)
+    % hObject    handle to burning_slider (see GCBO)
+    % eventdata  reserved - to be defined in a future version of MATLAB
+    % handles    empty - handles not created until after all CreateFcns called
+
+    % Hint: slider controls usually have a light gray background.
+    if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+        set(hObject,'BackgroundColor',[.9 .9 .9]);
+    end
+end
+
+function burning_edittext_Callback(hObject, eventdata, handles)
+    % hObject    handle to burning_edittext (see GCBO)
+    % eventdata  reserved - to be defined in a future version of MATLAB
+    % handles    structure with handles and user data (see GUIDATA)
+
+    % Hints: get(hObject,'String') returns contents of burning_edittext as text
+    %        str2double(get(hObject,'String')) returns contents of burning_edittext as a double
+end
+
+% --- Executes during object creation, after setting all properties.
+function burning_edittext_CreateFcn(hObject, eventdata, handles)
+    % hObject    handle to burning_edittext (see GCBO)
+    % eventdata  reserved - to be defined in a future version of MATLAB
+    % handles    empty - handles not created until after all CreateFcns called
+
+    % Hint: edit controls usually have a white background on Windows.
+    %       See ISPC and COMPUTER.
+    if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+        set(hObject,'BackgroundColor','white');
+    end
+end
+
+% --- Executes on button press in burning_button.
+function burning_button_Callback(hObject, eventdata, handles)
+    % hObject    handle to burning_button (see GCBO)
+    % eventdata  reserved - to be defined in a future version of MATLAB
+    % handles    structure with handles and user data (see GUIDATA)
+
+    global burning_i;
+    index = get(handles.burning_edittext, 'String');
+    if (str2double(index) <= 5 && str2double(index) >= 1)
+        index = uint8(str2double(index));
+        set(handles.burning_slider, 'Value', index);
+        burning_i = index;
+    end
+end
+

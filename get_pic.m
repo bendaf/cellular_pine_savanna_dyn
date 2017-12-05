@@ -18,6 +18,8 @@ function rgbPic = get_pic(savanna, burning_table)
     % LIGHTNING
     rgbPic = recolor(rgbPic, find(burning_table == get_repr('lightning')), 1, 1, 1);
     
+    % BURNING
+    rgbPic = recolor(rgbPic, find(burning_table == get_repr('burning')), .6, 0, 0);
 end
 
 function rgbPic = recolor(rgbPic, ind, r, g, b)
