@@ -59,6 +59,10 @@ function testgui_OpeningFcn(hObject, eventdata, handles, varargin)
     guidata(hObject, handles);
 
     % UIWAIT makes testgui wait for user response (see UIRESUME)
+    global HURRICANE;
+    global LIGHTNING;
+    HURRICANE = [intmax(), 20, 10, 5, 1];
+    LIGHTNING = [0, 1, 10, 100, 1000];
     reset_button_Callback(hObject, eventdata, handles);
 end
 
@@ -81,27 +85,29 @@ function reset_button_Callback(hObject, eventdata, handles)
 %     plot(handles.axes1, x, sin(x*1));
     
     global savanna;
-    global HURRICANE;
     global hurricane_i;
-    global LIGHTNING;
     global lightning_i;
     global field_distr;
     global age;
-    savanna = generate_savanna(0.32, 0.34);
-    image(handles.axes1, get_pic(savanna, zeros(size(savanna))));
     
-    HURRICANE = [intmax(), 20, 10, 5, 1];
+    % texts and sliders
+    age = 0;
+    set_year(handles, 0);
     hurricane_i = 2;
-    LIGHTNING = [0, 1, 10, 100, 1000];
     lightning_i = 2;
     set(handles.hurricane_slider, 'Value', 2);
     set(handles.hurricane_edittext, 'String', num2str(2));
     set(handles.lightning_slider, 'Value', 2);
     set(handles.lightning_edittext, 'String', num2str(2));
     set(handles.ages_edittext, 'String', 99);
-    set_year(handles, 0);
+    
+    % axes 1
+    savanna = generate_savanna(0.32, 0.34);
+    axes(handles.axes1)
+    image(handles.axes1, get_pic(savanna, zeros(size(savanna))));
+    
+    % axes 2
     field_distr = zeros(1,3);
-    age = 0;
     axes(handles.axes2); % Make averSpec the current axes.
     cla reset; % Do a complete and total reset of the axes.
     update_distr(handles, 1);
@@ -109,7 +115,6 @@ function reset_button_Callback(hObject, eventdata, handles)
     handles.axes2.XLim = [0, age+1];
     legend('grass','pine','hardwood','Orientation','horizontal');
 end
-
 
 % --- Executes on slider movement.
 function hurricane_slider_Callback(hObject, eventdata, handles)
@@ -187,20 +192,23 @@ function startbutton_Callback(hObject, eventdata, handles)
     global lightning_i;
     global field_distr;
     global age;
+    
     set(handles.reset_button, 'Enable','off');
+    
     ages = get(handles.ages_edittext,'String');
     ages = double(uint64(str2double(ages)));
     if ages < 1 || ages > 1000
         ages = 100;
         set(handles.ages_edittext, 'String', 100);
     end
+    
     field_distr(age+1:age+ages+1, :) = zeros(ages+1, 3);
     update_distr(handles, 1);
     handles.axes2.XLim = [0, age+ages];
+    
     for i = 1:ages
         set_year(handles, age+i);
         burning_table = lightning_step(savanna, LIGHTNING(lightning_i)); % lightning
-        
         savanna = step(savanna, burning_table); % growing of savanna
         if rem(age+i, HURRICANE(hurricane_i)) == 0  % hurricane
             savanna = hurricane_step(savanna);
@@ -209,6 +217,7 @@ function startbutton_Callback(hObject, eventdata, handles)
         update_distr(handles, i+1);
         drawnow;
     end
+    
     age = age + ages;
     set(handles.reset_button, 'Enable','on');
 end
