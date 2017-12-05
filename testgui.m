@@ -105,7 +105,7 @@ function reset_button_Callback(hObject, eventdata, handles)
     set(handles.lightning_edittext, 'String', num2str(2));
     set(handles.burning_slider, 'Value', 2);
     set(handles.burning_edittext, 'String', num2str(2));
-    set(handles.ages_edittext, 'String', 99);
+    set(handles.ages_edittext, 'String', 115);
     
     % axes 1
     savanna = generate_savanna(0.32, 0.34);
