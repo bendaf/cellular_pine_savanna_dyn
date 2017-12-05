@@ -7,7 +7,7 @@ function code = get_repr(type)
     %  44    lighting
     %  45    burning
     %  46    destroyed by hurricane
-    young_plant_age = 4;
+    young_plant_age = 5;
     if strcmp(type, 'grass')
         code = 0;
     elseif strcmp(type, 'young_pine')
